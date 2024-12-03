@@ -1,0 +1,7 @@
+wandb
+matplotlib
+tqdm
+matplotlib
+jupyter
+ipywidgets
+ipykernel
