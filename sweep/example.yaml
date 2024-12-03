@@ -1,0 +1,25 @@
+command:
+  - ${env}
+  - python3
+  - ${program}
+  - env=entity 
+  - learning.total_timesteps=34359738368
+  - ${args_no_hyphens}
+method: grid
+parameters:
+  grad_accum:
+    values:
+      - 1
+      - 16
+      - 128
+      - 1024
+  learning.lr:
+    values:
+      - 1e-5
+      - 1e-4
+      - 1e-3
+  seed:
+    values:
+      - 0
+      - 1
+program: experiments/sfl_rnn.py
