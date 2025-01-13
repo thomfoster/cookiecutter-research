@@ -20,6 +20,11 @@ while IFS='=' read -r key value; do
 
   # Export the environment variable
   export "$key=$value"
+
+  # Print the name of the variable if it is not an empty string
+  if [[ -n $value ]]; then
+    echo "Exported: $key"
+  fi
 done < .env
 
 echo "Environment variables successfully exported"
