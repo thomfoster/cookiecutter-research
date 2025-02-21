@@ -8,6 +8,8 @@ if [[ ! -f .env ]]; then
   exit 1
 fi
 
+echo "Exported the following env variables from .env file:"
+
 # Export each line in the .env file as an environment variable
 while IFS='=' read -r key value; do
   # Skip lines that are comments or empty
@@ -26,5 +28,3 @@ while IFS='=' read -r key value; do
     echo "Exported: $key"
   fi
 done < .env
-
-echo "Environment variables successfully exported"
