@@ -12,11 +12,14 @@ RUN apt update
 RUN apt install -y software-properties-common && add-apt-repository ppa:deadsnakes/ppa
 RUN apt install -y \
     git \
-    python3.8 \
+    python3.11 \
     python3-pip \
-    python3.8-venv \
+    python3.11-venv \
     python3-setuptools \
     python3-wheel
+
+RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 1
+RUN update-alternatives --set python3 /usr/bin/python3.11
 
 # Create local user
 # https://jtreminio.com/blog/running-docker-containers-as-current-host-user/
@@ -36,6 +39,9 @@ WORKDIR /home/duser
 ENV PATH="/home/duser/.local/bin:$PATH"
 RUN python3 -m pip install --upgrade pip
 ARG REQS
-RUN pip install $REQS -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html
+RUN python3 -m pip install $REQS -f https://storage.googleapis.com/jax-releases/jax_cuda_releases.html
 
-WORKDIR /home/duser/jaxcredibots
+# copy in cwd to /home/duser/project
+COPY --chown=duser:duser . /home/duser/project
+WORKDIR /home/duser/project
+RUN python3 -m pip install -e .

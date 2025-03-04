@@ -1,27 +1,15 @@
 #!/bin/bash
-WANDB_API_KEY=$(cat ./wandb_key)
-# git pull
+echo "Launching container thomf_cookiecutter"
 
-script_and_args="${@:2}"
-if [ $1 == "all" ]; then
-    gpus="0 1 2 3 4 5 6 7"
-else
-    gpus=$1
-fi
+CUDA_VISIBLE_DEVICES=1
 
-echo "launching on $gpus"
-
-for gpu in $gpus; do
-    echo "Launching container jaxcredibots_$gpu on GPU $gpu"
-    docker run \
-        --gpus device=$gpu \
-        -e WANDB_API_KEY=$WANDB_API_KEY \
-        -e PYTHONPATH=/home/duser/jaxcredibots \
-        -v $(pwd):/home/duser/jaxcredibots \
-        --name jaxcredibots_$gpu \
-        --user $(id -u) \
-        --rm \
-	-d \
-        -t jaxcredibots \
-        /bin/bash -c "$script_and_args"
-done
+docker run \
+    --gpus "device=${CUDA_VISIBLE_DEVICES}" \
+    --env-file .env \
+    -e PYTHONPATH=/home/duser/project \
+    --name thomf_cookiecutter \
+    --rm \
+    -v $(pwd):/home/duser/project \
+    --user $(id -u) \
+    thomf_cookiecutter \
+    /bin/bash -c "python3 scripts/env_debugger.py"
